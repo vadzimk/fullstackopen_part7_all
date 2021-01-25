@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-import {Link, Switch, Route, Redirect} from 'react-router-dom'
+import {Link, Switch, Route, Redirect, useRouteMatch} from 'react-router-dom'
+import ViewOne from "./ViewOne.js";
 
 const Menu = () => {
     const padding = {
@@ -18,7 +19,7 @@ const AnecdoteList = ({anecdotes}) => (
     <div>
         <h2>Anecdotes</h2>
         <ul>
-            {anecdotes.map(anecdote => <li key={anecdote.id}>{anecdote.content}</li>)}
+            {anecdotes.map(anecdote => <li key={anecdote.id}><a href={`/anecdotes/${anecdote.id}`}>{anecdote.content}</a></li>)}
         </ul>
     </div>
 )
@@ -127,11 +128,19 @@ const App = () => {
         setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
     }
 
+    const match = useRouteMatch('/anecdotes/:id')
+    const anecdote = match ? anecdoteById(match.params.id) : null
+
+
+
     return (
         <div>
             <h1>Software anecdotes</h1>
             <Menu/>
             <Switch>
+                <Route path={'/anecdotes/:id'}>
+                    <ViewOne anecdote={anecdote}/>
+                </Route>
                 <Route  path={'/anecdotes'}>
                     <AnecdoteList anecdotes={anecdotes}/>
                 </Route>
