@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Link, Switch, Route, Redirect, useRouteMatch} from 'react-router-dom'
+import {Link, Switch, Route, Redirect, useRouteMatch, useHistory} from 'react-router-dom'
 import ViewOne from "./ViewOne.js";
 
 const Menu = () => {
@@ -19,7 +19,8 @@ const AnecdoteList = ({anecdotes}) => (
     <div>
         <h2>Anecdotes</h2>
         <ul>
-            {anecdotes.map(anecdote => <li key={anecdote.id}><a href={`/anecdotes/${anecdote.id}`}>{anecdote.content}</a></li>)}
+            {anecdotes.map(anecdote => <li key={anecdote.id}><a
+                href={`/anecdotes/${anecdote.id}`}>{anecdote.content}</a></li>)}
         </ul>
     </div>
 )
@@ -54,7 +55,7 @@ const CreateNew = (props) => {
     const [content, setContent] = useState('')
     const [author, setAuthor] = useState('')
     const [info, setInfo] = useState('')
-
+    const history = useHistory()
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -64,6 +65,7 @@ const CreateNew = (props) => {
             info,
             votes: 0
         })
+        history.push('/anecdotes')
     }
 
     return (
@@ -89,6 +91,13 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({message}) => {
+
+    return message
+        ? <div>{message}</div>
+        : null
+}
+
 const App = () => {
     const [anecdotes, setAnecdotes] = useState([
         {
@@ -112,6 +121,8 @@ const App = () => {
     const addNew = (anecdote) => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
         setAnecdotes(anecdotes.concat(anecdote))
+        setNotification(`a new anecdote ${anecdote.content} created`)
+        setTimeout(()=>setNotification(''), 5000)
     }
 
     const anecdoteById = (id) =>
@@ -132,16 +143,16 @@ const App = () => {
     const anecdote = match ? anecdoteById(match.params.id) : null
 
 
-
     return (
         <div>
             <h1>Software anecdotes</h1>
             <Menu/>
+            <Notification message={notification}/>
             <Switch>
                 <Route path={'/anecdotes/:id'}>
                     <ViewOne anecdote={anecdote}/>
                 </Route>
-                <Route  path={'/anecdotes'}>
+                <Route path={'/anecdotes'}>
                     <AnecdoteList anecdotes={anecdotes}/>
                 </Route>
                 <Route path={'/about'}>
