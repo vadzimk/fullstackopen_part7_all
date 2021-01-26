@@ -13,5 +13,5 @@ export const useField = (name) => {
         setValue('')
     }
 
-    return {name, value, onChange, reset}
+    return {inputHandler: {name, value, onChange}, reset}
 }

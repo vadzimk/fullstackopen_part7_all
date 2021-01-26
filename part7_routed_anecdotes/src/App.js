@@ -68,9 +68,9 @@ const CreateNew = (props) => {
         e.preventDefault()
         console.log("content", content)
         props.addNew({
-            content: content.value,
-            author: author.value,
-            info: info.value,
+            content: content.inputHandler.value,
+            author: author.inputHandler.value,
+            info: info.inputHandler.value,
             votes: 0
         })
         history.push('/anecdotes')
@@ -81,21 +81,22 @@ const CreateNew = (props) => {
         author.reset()
         info.reset()
     }
+
     return (
         <div>
             <h2>create a new anecdote</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     content
-                    <input {...content}/>
+                    <input {...content.inputHandler}/>
                 </div>
                 <div>
                     author
-                    <input {...author}/>
+                    <input {...author.inputHandler}/>
                 </div>
                 <div>
                     url for more info
-                    <input {...info}/>
+                    <input {...info.inputHandler}/>
                 </div>
                 <button>create</button>
             </form>
