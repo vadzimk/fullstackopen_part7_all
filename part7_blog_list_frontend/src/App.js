@@ -6,10 +6,10 @@ import loginService from "./services/login.js";
 import BlogForm from "./components/BlogForm.js";
 import Notification from "./components/Notification.js";
 import Togglable from "./components/Togglable.js";
+import {setUser} from "./reducers/usersReducer.js";
 
 import {setNotification} from "./reducers/notificationReducer.js";
 import {
-    addBlog,
     addBlogAndNotify,
     initBlogs,
     removeBlogAndNotify,
@@ -18,8 +18,8 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
-    const [user, setUser] = useState(null)
+    // const [blogs, setBlogs] = useState([])
+    // const [user, setUser] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     //const [notification, setNotification] = useState({message: '', isError: false})
@@ -27,6 +27,7 @@ const App = () => {
     const dispatch = useDispatch()
     const notification = useSelector(state=>state.notification)
     const storeBlogs = useSelector(state=>state.blogs)
+    const user = useSelector(state=>state.user)
     /**
      * @param message is error if error is true, else just message
      * @param isError is true if notifies about error
@@ -49,7 +50,7 @@ const App = () => {
     const fetchUserFromStorage = () => {
         const json_user = window.localStorage.getItem("blogAppUser")
         const user = JSON.parse(json_user)
-        setUser(user)
+        dispatch(setUser(user))
         if (user && user.token) {
             blogService.setToken(user.token)
         }
@@ -62,11 +63,11 @@ const App = () => {
             const user = await loginService.login({username, password})
             window.localStorage.setItem('blogAppUser', JSON.stringify(user))
             blogService.setToken(user.token)
-            setUser(user)
+            dispatch(setUser(user))
             setUsername('')
             setPassword('')
             notify('Login successful')
-            console.log(user)
+            console.log("user from handleLogin", user)
         } catch (e) {
             notify(e, true)
         }
@@ -75,7 +76,7 @@ const App = () => {
     const handleLogOut = () => {
         try {
             window.localStorage.removeItem('blogAppUser')
-            setUser(null)
+            dispatch(setUser(null))
             notify('Logout successful')
         } catch (e) {
             notify(e, true)
