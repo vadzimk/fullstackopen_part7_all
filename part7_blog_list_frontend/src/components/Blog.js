@@ -1,8 +1,11 @@
 import React, {useState} from 'react'
+import {Link} from 'react-router-dom'
+import {removeBlogAndNotify} from "../reducers/blogsReducer.js";
+import {useDispatch} from "react-redux";
 
 const Blog = ({blog, handleUpdateBlog, handleRemoveBlog}) => {
-
-    const [showDetails, setShowDetails] = useState(false)
+    const dispatch = useDispatch()
+    // const [showDetails, setShowDetails] = useState(false)
 
 
     // Blog.Schema = {title: '', author: '', url: '', likes: 0, user: ''}
@@ -14,42 +17,63 @@ const Blog = ({blog, handleUpdateBlog, handleRemoveBlog}) => {
         marginBottom: 5,
         borderRadius: 5
     }
-
-    const detailsStyle = {
-        display: showDetails ? '' : 'none'
+    const right = {
+        float: "right"
     }
 
-    const updateBlog = (blog) => {
-        blog.likes += 1
-        handleUpdateBlog(blog)
-    }
+
+    // const detailsStyle = {
+    //     display: showDetails ? '' : 'none'
+    // }
+
+    // const updateBlog = (blog) => {
+    //     blog.likes += 1
+    //     handleUpdateBlog(blog)
+    // }
+    //
+    // const removeBlog = (blog) => {
+    //     window.confirm(`delete ${blog.title} ?`)
+    //     handleRemoveBlog(blog)
+    // }
+
+    // // expands blog when clicking view button
+    // return (
+    //     <div style={blogStyle} className="blog">
+    //         <div>{blog.title} {blog.author}
+    //             <button onClick={() => {
+    //                 setShowDetails(!showDetails)
+    //             }}>{showDetails ? 'hide' : 'view'}</button>
+    //         </div>
+    //         <div style={detailsStyle} className="details">
+    //             <div>{blog.url}</div>
+    //             <div><span>likes {blog.likes}</span>
+    //                 <button id="likebutton" onClick={() => {
+    //                     updateBlog(blog)
+    //                 }}>like
+    //                 </button>
+    //             </div>
+    //             <div>{blog.author}</div>
+    //             <button onClick={() => {
+    //                 removeBlog(blog)
+    //             }}>remove
+    //             </button>
+    //         </div>
+    //     </div>
+    // )
 
     const removeBlog = (blog) => {
         window.confirm(`delete ${blog.title} ?`)
-        handleRemoveBlog(blog)
+        dispatch(removeBlogAndNotify(blog))
     }
 
+
     return (
-        <div style={blogStyle} className="blog">
-            <div>{blog.title} {blog.author}
-                <button onClick={() => {
-                    setShowDetails(!showDetails)
-                }}>{showDetails ? 'hide' : 'view'}</button>
-            </div>
-            <div style={detailsStyle} className="details">
-                <div>{blog.url}</div>
-                <div><span>likes {blog.likes}</span>
-                    <button id="likebutton" onClick={() => {
-                        updateBlog(blog)
-                    }}>like
-                    </button>
-                </div>
-                <div>{blog.author}</div>
-                <button onClick={() => {
-                    removeBlog(blog)
-                }}>remove
-                </button>
-            </div>
+        <div style={blogStyle}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+            <button style={right} onClick={() => {
+                removeBlog(blog)
+            }}>remove
+            </button>
         </div>
     )
 }

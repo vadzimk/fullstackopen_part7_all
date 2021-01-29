@@ -10,14 +10,18 @@ import Togglable from "./components/Togglable.js";
 import {setUser} from "./reducers/usersReducer.js";
 import Users from "./components/Users.js";
 import {setNotification} from "./reducers/notificationReducer.js";
+
 import {
     addBlogAndNotify,
     initBlogs,
     removeBlogAndNotify,
     updateBlogAndNotify
 } from "./reducers/blogsReducer.js";
+
 import {useDispatch, useSelector} from "react-redux";
 import UserView from "./components/UserView.js";
+import BlogView from "./components/BlogView.js";
+
 
 const App = () => {
     // const [blogs, setBlogs] = useState([])
@@ -101,31 +105,31 @@ const App = () => {
         }
     }
 
-    const handleUpdateBlog = async (blog) => {
-        // try {
-        //     const result = await blogService.updateBlog(blog)
-        //     setBlogs(blogs.map(b => b.id === result.id ? result : b))
-        // } catch (e) {
-        //     notify(e, true)
-        // }
+    // const handleUpdateBlog = async (blog) => {
+    //     // try {
+    //     //     const result = await blogService.updateBlog(blog)
+    //     //     setBlogs(blogs.map(b => b.id === result.id ? result : b))
+    //     // } catch (e) {
+    //     //     notify(e, true)
+    //     // }
+    //
+    //     dispatch(updateBlogAndNotify(blog))
+    // }
 
-        dispatch(updateBlogAndNotify(blog))
-    }
-
-    const handleRemoveBlog = async (blog) => {
-        // try {
-        //     const result = await blogService.removeBlog(blog)
-        //     if (result.status === 204 ) {
-        //         setBlogs(blogs.filter(b => b.id !== blog.id))
-        //         notify(`Deleted: ${blog.title}`)
-        //     } else{
-        //         notify(result)
-        //     }
-        // } catch (e){
-        //     notify(e, true)
-        // }
-        dispatch(removeBlogAndNotify(blog))
-    }
+    // const handleRemoveBlog = async (blog) => {
+    //     // try {
+    //     //     const result = await blogService.removeBlog(blog)
+    //     //     if (result.status === 204 ) {
+    //     //         setBlogs(blogs.filter(b => b.id !== blog.id))
+    //     //         notify(`Deleted: ${blog.title}`)
+    //     //     } else{
+    //     //         notify(result)
+    //     //     }
+    //     // } catch (e){
+    //     //     notify(e, true)
+    //     // }
+    //     dispatch(removeBlogAndNotify(blog))
+    // }
 
     const padding = {
         padding: 5
@@ -163,6 +167,9 @@ const App = () => {
                             <Route path="/users">
                                 <Users/>
                             </Route>
+                            <Route path="/blogs/:blogid">
+                                <BlogView/>
+                            </Route>
                             <Route path="/">
                                 <div>
                                     <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
@@ -172,8 +179,8 @@ const App = () => {
                                         <Blog
                                             key={blog.id}
                                             blog={blog}
-                                            handleUpdateBlog={handleUpdateBlog}
-                                            handleRemoveBlog={handleRemoveBlog}
+                                            // handleUpdateBlog={handleUpdateBlog}
+                                            // handleRemoveBlog={handleRemoveBlog}
                                         />
                                     )}
                                 </div>
