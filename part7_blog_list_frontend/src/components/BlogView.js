@@ -1,7 +1,7 @@
 import React from "react";
 import {useParams} from 'react-router-dom'
 import {useDispatch, useSelector} from "react-redux";
-import {removeBlogAndNotify, updateBlogAndNotify} from "../reducers/blogsReducer.js";
+import {updateBlogAndNotify} from "../reducers/blogsReducer.js";
 
 const BlogView = () => {
 

@@ -1,26 +1,23 @@
-import React, {useState, useEffect, useRef} from 'react'
-import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
-import Blog from './components/Blog'
+import React, {useState, useEffect} from 'react'
+import {BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
+// import Blog from './components/Blog'
 import LoginForm from "./components/LoginForm.js";
 import blogService from './services/blogs'
 import loginService from "./services/login.js";
-import BlogForm from "./components/BlogForm.js";
+// import BlogForm from "./components/BlogForm.js";
 import Notification from "./components/Notification.js";
-import Togglable from "./components/Togglable.js";
+// import Togglable from "./components/Togglable.js";
 import {setUser} from "./reducers/usersReducer.js";
 import Users from "./components/Users.js";
 import {setNotification} from "./reducers/notificationReducer.js";
 
-import {
-    addBlogAndNotify,
-    initBlogs,
-    removeBlogAndNotify,
-    updateBlogAndNotify
-} from "./reducers/blogsReducer.js";
+import {initBlogs} from "./reducers/blogsReducer.js";
 
 import {useDispatch, useSelector} from "react-redux";
 import UserView from "./components/UserView.js";
 import BlogView from "./components/BlogView.js";
+import BlogFormContainer from "./components/BlogFormContainer.js";
+import BlogList from "./components/BlogList.js";
 
 
 const App = () => {
@@ -29,10 +26,10 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     //const [notification, setNotification] = useState({message: '', isError: false})
-    const newBlogRef = useRef(null)
+
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
-    const storeBlogs = useSelector(state => state.blogs)
+
     const user = useSelector(state => state.user)
 
 
@@ -76,7 +73,7 @@ const App = () => {
             setUsername('')
             setPassword('')
             notify('Login successful')
-            console.log("user from handleLogin", user)
+
         } catch (e) {
             notify(e, true)
         }
@@ -93,17 +90,6 @@ const App = () => {
 
     }
 
-    const handleCreateBlog = async (newBlog) => {
-        try {
-            // const blog = await blogService.createBlog(newBlog)
-            // setBlogs(blogs.concat(blog))
-            dispatch(addBlogAndNotify(newBlog))
-            // notify(`Created: ${newBlog.title}`)
-            newBlogRef.current.toggleVisibility()
-        } catch (e) {
-            notify(e, true)
-        }
-    }
 
     // const handleUpdateBlog = async (blog) => {
     //     // try {
@@ -139,7 +125,7 @@ const App = () => {
         <div>
             <Router>
                 <div>
-                    <Link to="/" style={padding}>home</Link>
+                    <Link to="/blogs" style={padding}>blogs</Link>
                     <Link to="/users" style={padding}>users</Link>
 
                 </div>
@@ -170,27 +156,18 @@ const App = () => {
                             <Route path="/blogs/:blogid">
                                 <BlogView/>
                             </Route>
-                            <Route path="/">
+                            <Route path="/blogs">
                                 <div>
-                                    <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
-                                        <BlogForm handleCreateBlog={handleCreateBlog}/>
-                                    </Togglable>
-                                    {storeBlogs.sort((a, b) => (b.likes - a.likes)).map(blog =>
-                                        <Blog
-                                            key={blog.id}
-                                            blog={blog}
-                                            // handleUpdateBlog={handleUpdateBlog}
-                                            // handleRemoveBlog={handleRemoveBlog}
-                                        />
-                                    )}
+                                    <BlogFormContainer/>
+                                    <BlogList/>
                                 </div>
+                            </Route>
+                            <Route path="/">
+                                <Redirect to="/blogs"/>
                             </Route>
                         </Switch>
                     </div>
-
                 }
-
-
             </Router>
         </div>
     )
