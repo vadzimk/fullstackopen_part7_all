@@ -18,6 +18,7 @@ import UserView from "./components/UserView.js";
 import BlogView from "./components/BlogView.js";
 import BlogFormContainer from "./components/BlogFormContainer.js";
 import BlogList from "./components/BlogList.js";
+import {AppBar, Button, Container, Toolbar} from "@material-ui/core";
 
 
 const App = () => {
@@ -121,14 +122,20 @@ const App = () => {
         padding: 5
     }
 
-    return (
-        <div>
-            <Router>
-                <div>
-                    <Link to="/blogs" style={padding}>blogs</Link>
-                    <Link to="/users" style={padding}>users</Link>
+    const colorWhite = {"color": "rgb(255, 255, 255)"}
 
-                </div>
+    return (
+        <Container>
+            <Router>
+                <AppBar>
+                    <Toolbar>
+                        <Button component={Link} to="/blogs" style={colorWhite} >blogs</Button>
+                        <Button component={Link} to="/users" style={colorWhite}>users</Button>
+                        <div style={colorWhite}>{user ? user.name :""} is logged in</div>
+                        <Button variant="outlined" size="small" onClick={handleLogOut} style={colorWhite}>logout</Button>
+                    </Toolbar>
+                </AppBar>
+
                 <Notification {...notification}/>
                 {(user === null) ?
                     <div>
@@ -144,8 +151,7 @@ const App = () => {
                     :
                     <div>
                         <h2>blogs</h2>
-                        <p>{user.name} is logged in</p>
-                        <button onClick={handleLogOut}>logout</button>
+
                         <Switch>
                             <Route path="/users/:userid">
                                 <UserView/>
@@ -169,7 +175,7 @@ const App = () => {
                     </div>
                 }
             </Router>
-        </div>
+        </Container>
     )
 }
 
