@@ -17,6 +17,7 @@ import {
     updateBlogAndNotify
 } from "./reducers/blogsReducer.js";
 import {useDispatch, useSelector} from "react-redux";
+import UserView from "./components/UserView.js";
 
 const App = () => {
     // const [blogs, setBlogs] = useState([])
@@ -155,41 +156,34 @@ const App = () => {
                         <h2>blogs</h2>
                         <p>{user.name} is logged in</p>
                         <button onClick={handleLogOut}>logout</button>
+                        <Switch>
+                            <Route path="/users/:userid">
+                                <UserView/>
+                            </Route>
+                            <Route path="/users">
+                                <Users/>
+                            </Route>
+                            <Route path="/">
+                                <div>
+                                    <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
+                                        <BlogForm handleCreateBlog={handleCreateBlog}/>
+                                    </Togglable>
+                                    {storeBlogs.sort((a, b) => (b.likes - a.likes)).map(blog =>
+                                        <Blog
+                                            key={blog.id}
+                                            blog={blog}
+                                            handleUpdateBlog={handleUpdateBlog}
+                                            handleRemoveBlog={handleRemoveBlog}
+                                        />
+                                    )}
+                                </div>
+                            </Route>
+                        </Switch>
                     </div>
+
                 }
-                <Switch>
-                    <Route path="/users">
-                        {(user !== null) ?
-                            <Users/>
-                            :
-                            null
-                        }
-                    </Route>
-                    <Route path="/">
-                        {(user !== null) ?
-                            <div>
-
-                                <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
-                                    <BlogForm handleCreateBlog={handleCreateBlog}/>
-                                </Togglable>
-                                {storeBlogs.sort((a, b) => (b.likes - a.likes)).map(blog =>
-                                    <Blog
-                                        key={blog.id}
-                                        blog={blog}
-                                        handleUpdateBlog={handleUpdateBlog}
-                                        handleRemoveBlog={handleRemoveBlog}
-                                    />
-                                )}
-                            </div>
-                            :
-                            null
-                        }
 
 
-                    </Route>
-
-
-                </Switch>
             </Router>
         </div>
     )

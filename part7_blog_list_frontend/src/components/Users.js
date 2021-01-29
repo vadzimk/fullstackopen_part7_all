@@ -1,35 +1,38 @@
 import React, {useEffect} from "react";
 import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
 
 
 const Users = () => {
-    const blogs = useSelector(state => state.blogs)
 
-    console.log("blogs", blogs)
-
-    const uniqueUsers = () => {
+    const uniqueUsers = ({blogs}) => {
         const users = []
 
-        for (let i = 0; i < blogs.length; i++) {
-            if (users.length === 0) {
-                users[0] = {
-                    username: blogs[i].user.username,
-                    name: blogs[i].user.name,
-                    numBlogs: 1
-                }
-            }
+        users[0] = {
+            id: blogs[0].user.id,
+            name: blogs[0].user.name,
+            numBlogs: 1
+        }
+
+        for (let i = 1; i < blogs.length; i++) {
             for (let j = 0; j < users.length; j++) {
-                if (blogs[i].user.username === users[j].username) {
+                if (blogs[i].user.id === users[j].id) {
                     users[j].numBlogs += 1
+                } else{
+                    let user = {
+                        id: blogs[i].user.id,
+                        name: blogs[i].user.name,
+                        numBlogs: 1
+                    }
+                    users.push(user)
                 }
             }
         }
-
-        console.log("unique users", users)
         return users
     }
 
-    const userdata = uniqueUsers()
+    const userdata = useSelector(uniqueUsers)
+
 
     return (
         <div>
@@ -44,8 +47,8 @@ const Users = () => {
                 <tbody>
                 {
                     userdata.map((u) =>
-                        <tr key={u.username}>
-                            <td>{u.name}</td>
+                        <tr key={u.id}>
+                            <td><Link to={`/users/${u.id}`}>{u.name}</Link></td>
                             <td>{u.numBlogs}</td>
                         </tr>
                     )
