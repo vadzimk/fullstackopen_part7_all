@@ -1,9 +1,7 @@
-import loginService from '../services/login.js'
-
 
 // action creator
 export const setUser=(user)=>{
-    console.log("user from setUser", user)
+
     return (dispatch)=>{
         dispatch({
             type: 'SET_USER',

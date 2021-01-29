@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import Blog from './components/Blog'
 import LoginForm from "./components/LoginForm.js";
 import blogService from './services/blogs'
@@ -7,7 +8,7 @@ import BlogForm from "./components/BlogForm.js";
 import Notification from "./components/Notification.js";
 import Togglable from "./components/Togglable.js";
 import {setUser} from "./reducers/usersReducer.js";
-
+import Users from "./components/Users.js";
 import {setNotification} from "./reducers/notificationReducer.js";
 import {
     addBlogAndNotify,
@@ -25,9 +26,11 @@ const App = () => {
     //const [notification, setNotification] = useState({message: '', isError: false})
     const newBlogRef = useRef(null)
     const dispatch = useDispatch()
-    const notification = useSelector(state=>state.notification)
-    const storeBlogs = useSelector(state=>state.blogs)
-    const user = useSelector(state=>state.user)
+    const notification = useSelector(state => state.notification)
+    const storeBlogs = useSelector(state => state.blogs)
+    const user = useSelector(state => state.user)
+
+
     /**
      * @param message is error if error is true, else just message
      * @param isError is true if notifies about error
@@ -43,7 +46,7 @@ const App = () => {
         // blogService.getAll().then(blogs =>
         //     setBlogs(blogs)
         // )
-        console.log('useEffect')
+
         dispatch(initBlogs())
     }, [dispatch])
 
@@ -55,6 +58,7 @@ const App = () => {
             blogService.setToken(user.token)
         }
     }
+
     useEffect(fetchUserFromStorage, [])  // dependencies [] - effect is executed only when the component is rendered for the first time
 
     const handleLogin = async (e) => {
@@ -107,7 +111,7 @@ const App = () => {
         dispatch(updateBlogAndNotify(blog))
     }
 
-    const handleRemoveBlog = async (blog)=>{
+    const handleRemoveBlog = async (blog) => {
         // try {
         //     const result = await blogService.removeBlog(blog)
         //     if (result.status === 204 ) {
@@ -122,40 +126,71 @@ const App = () => {
         dispatch(removeBlogAndNotify(blog))
     }
 
-
+    const padding = {
+        padding: 5
+    }
 
     return (
         <div>
-            <Notification {...notification}/>
-            {(user === null) ?
+            <Router>
                 <div>
-                    <h3>log in to application</h3>
-                    <LoginForm
-                        handleLogin={handleLogin}
-                        username={username}
-                        password={password}
-                        setUserName={setUsername}
-                        setPassword={setPassword}
-                    />
+                    <Link to="/" style={padding}>home</Link>
+                    <Link to="/users" style={padding}>users</Link>
+
                 </div>
-                :
-                <div>
-                    <h2>blogs</h2>
-                    <p>{user.name} is logged in
-                        <button onClick={handleLogOut}>logout</button>
-                    </p>
-                    <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
-                        <BlogForm handleCreateBlog={handleCreateBlog}/>
-                    </Togglable>
-                    {storeBlogs.sort((a, b) => (b.likes - a.likes)).map(blog =>
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            handleUpdateBlog={handleUpdateBlog}
-                            handleRemoveBlog={handleRemoveBlog}
+                <Notification {...notification}/>
+                {(user === null) ?
+                    <div>
+                        <h3>log in to application</h3>
+                        <LoginForm
+                            handleLogin={handleLogin}
+                            username={username}
+                            password={password}
+                            setUserName={setUsername}
+                            setPassword={setPassword}
                         />
-                    )}
-                </div>}
+                    </div>
+                    :
+                    <div>
+                        <h2>blogs</h2>
+                        <p>{user.name} is logged in</p>
+                        <button onClick={handleLogOut}>logout</button>
+                    </div>
+                }
+                <Switch>
+                    <Route path="/users">
+                        {(user !== null) ?
+                            <Users/>
+                            :
+                            null
+                        }
+                    </Route>
+                    <Route path="/">
+                        {(user !== null) ?
+                            <div>
+
+                                <Togglable buttonLabel={'new blog'} ref={newBlogRef}>
+                                    <BlogForm handleCreateBlog={handleCreateBlog}/>
+                                </Togglable>
+                                {storeBlogs.sort((a, b) => (b.likes - a.likes)).map(blog =>
+                                    <Blog
+                                        key={blog.id}
+                                        blog={blog}
+                                        handleUpdateBlog={handleUpdateBlog}
+                                        handleRemoveBlog={handleRemoveBlog}
+                                    />
+                                )}
+                            </div>
+                            :
+                            null
+                        }
+
+
+                    </Route>
+
+
+                </Switch>
+            </Router>
         </div>
     )
 }
