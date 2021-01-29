@@ -6,6 +6,9 @@ import {Link} from "react-router-dom";
 const Users = () => {
 
     const uniqueUsers = ({blogs}) => {
+        if (!blogs.length) {
+            return null
+        }
         const users = []
 
         users[0] = {
@@ -18,7 +21,7 @@ const Users = () => {
             for (let j = 0; j < users.length; j++) {
                 if (blogs[i].user.id === users[j].id) {
                     users[j].numBlogs += 1
-                } else{
+                } else {
                     let user = {
                         id: blogs[i].user.id,
                         name: blogs[i].user.name,
@@ -33,6 +36,9 @@ const Users = () => {
 
     const userdata = useSelector(uniqueUsers)
 
+    if (!userdata) {
+        return null
+    }
 
     return (
         <div>
