@@ -125,21 +125,33 @@ const App = () => {
     const colorWhite = {"color": "rgb(255, 255, 255)"}
 
     return (
-        <Container>
-            <Router>
-                <AppBar>
+        <Router>
+
+            <Container>
+
+                <AppBar position="sticky">
                     <Toolbar>
-                        <Button component={Link} to="/blogs" style={colorWhite} >blogs</Button>
+                        <Button component={Link} to="/blogs" style={colorWhite}>blogs</Button>
                         <Button component={Link} to="/users" style={colorWhite}>users</Button>
-                        <div style={colorWhite}>{user ? user.name :""} is logged in</div>
-                        <Button variant="outlined" size="small" onClick={handleLogOut} style={colorWhite}>logout</Button>
+                        {user &&
+                            <>
+                                <div style={colorWhite}>{user ? user.name : ""} is logged in</div>
+                                <Button variant="outlined" size="small" onClick={handleLogOut}
+                                        style={colorWhite}>logout</Button>
+                            </>
+
+                        }
+
+
                     </Toolbar>
+
+
                 </AppBar>
 
                 <Notification {...notification}/>
                 {(user === null) ?
                     <div>
-                        <h3>log in to application</h3>
+
                         <LoginForm
                             handleLogin={handleLogin}
                             username={username}
@@ -150,9 +162,10 @@ const App = () => {
                     </div>
                     :
                     <div>
-                        <h2>blogs</h2>
 
+                        <h2>blogs</h2>
                         <Switch>
+
                             <Route path="/users/:userid">
                                 <UserView/>
                             </Route>
@@ -174,8 +187,9 @@ const App = () => {
                         </Switch>
                     </div>
                 }
-            </Router>
-        </Container>
+
+            </Container>
+        </Router>
     )
 }
 

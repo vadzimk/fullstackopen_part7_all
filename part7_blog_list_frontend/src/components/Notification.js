@@ -1,21 +1,22 @@
 import React from "react";
+import {Alert} from '@material-ui/lab'
 
 const Notification = ({message, isError}) => {
-    const msgStyle = {
-        color: "green",
-        border: "1px green solid",
-        borderRadius: 10,
-        textAlign: "center",
-        padding: 5,
-        marginBottom: 10
-    }
-
-    const errStyle = {
-        ...msgStyle,
-        color: "red",
-        borderColor: "red",
-
-    }
+    // const msgStyle = {
+    //     color: "green",
+    //     border: "1px green solid",
+    //     borderRadius: 10,
+    //     textAlign: "center",
+    //     padding: 5,
+    //     marginBottom: 10
+    // }
+    //
+    // const errStyle = {
+    //     ...msgStyle,
+    //     color: "red",
+    //     borderColor: "red",
+    //
+    // }
 
     let msg
     if(isError && message.response){
@@ -28,9 +29,9 @@ const Notification = ({message, isError}) => {
         !message ?
             null
             :
-            <div style={isError ? errStyle : msgStyle}>
+            <Alert severity={isError ? "error" : "success"}>
                 {msg}
-            </div>
+            </Alert>
     )
 }
 
