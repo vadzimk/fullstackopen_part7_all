@@ -18,7 +18,8 @@ import UserView from "./components/UserView.js";
 import BlogView from "./components/BlogView.js";
 import BlogFormContainer from "./components/BlogFormContainer.js";
 import BlogList from "./components/BlogList.js";
-import {AppBar, Button, Container, Toolbar} from "@material-ui/core";
+import {AppBar, Button, Container, IconButton, Toolbar} from "@material-ui/core";
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 const App = () => {
@@ -118,19 +119,20 @@ const App = () => {
     //     dispatch(removeBlogAndNotify(blog))
     // }
 
-    const padding = {
-        padding: 5
-    }
+    // const padding = {
+    //     padding: 5
+    // }
 
     const colorWhite = {"color": "rgb(255, 255, 255)"}
 
     return (
         <Router>
-
             <Container>
-
                 <AppBar position="sticky">
                     <Toolbar>
+                        <IconButton edge="start" color="inherit" aria-label="menu">
+                            <MenuIcon/>
+                        </IconButton>
                         <Button component={Link} to="/blogs" style={colorWhite}>blogs</Button>
                         <Button component={Link} to="/users" style={colorWhite}>users</Button>
                         {user &&
@@ -139,15 +141,9 @@ const App = () => {
                                 <Button variant="outlined" size="small" onClick={handleLogOut}
                                         style={colorWhite}>logout</Button>
                             </>
-
                         }
-
-
                     </Toolbar>
-
-
                 </AppBar>
-
                 <Notification {...notification}/>
                 {(user === null) ?
                     <div>
@@ -162,10 +158,8 @@ const App = () => {
                     </div>
                     :
                     <div>
-
                         <h2>blogs</h2>
                         <Switch>
-
                             <Route path="/users/:userid">
                                 <UserView/>
                             </Route>
@@ -187,7 +181,6 @@ const App = () => {
                         </Switch>
                     </div>
                 }
-
             </Container>
         </Router>
     )
