@@ -9,7 +9,7 @@ const BlogFormContainer = ()=>{
     const dispatch = useDispatch()
     const newBlogRef = useRef(null)
 
-    const handleCreateBlog = async (newBlog) => {
+    const handleCreateBlog = (newBlog) => {
             dispatch(addBlogAndNotify(newBlog))
             newBlogRef.current.toggleVisibility()
     }

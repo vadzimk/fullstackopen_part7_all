@@ -37,8 +37,8 @@ export const addBlogAndNotify = (blog) => {
     }
 }
 
-const removeBlog=(blog)=>{
-    return (dispatch)=>{
+const removeBlog = (blog) => {
+    return (dispatch) => {
         dispatch({
             type: 'REMOVE_BLOG',
             blog
@@ -61,21 +61,43 @@ export const removeBlogAndNotify = (blog) => {
 }
 
 
-const updateBlog = (blog)=>{
-    return (dispatch)=> {
+const updateBlog = (blog) => {
+    return (dispatch) => {
         dispatch({
             type: 'UPDATE_BLOG',
             blog
         })
     }
 }
-export const updateBlogAndNotify = (blog)=>{
-    return async (dispatch)=>{
+export const updateBlogAndNotify = (blog) => {
+    return async (dispatch) => {
         const res = await blogService.updateBlog(blog)
 
-        if (res.status === 200){
+        if (res.status === 200) {
             dispatch(updateBlog(blog))
             dispatch(setNotification({message: `Updated ${blog.title}`, isError: false}))
+        } else {
+            dispatch(setNotification({message: `Error status: ${res.status}`, isError: true}))
+        }
+    }
+}
+
+const addCommentToBlog = (comment, blogid) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'ADD_COMMENT',
+            comment,
+            blogid
+        })
+    }
+}
+
+export const addCommentToBlogAndNotify = (comment, blogid) => {
+    return async (dispatch) => {
+        const res = await blogService.addComment(comment, blogid)
+        if (res.status === 200) {
+            dispatch(addCommentToBlog(comment, blogid))
+            dispatch(setNotification({message: `Comment added: ${comment}`, isError: false}))
         } else {
             dispatch(setNotification({message: `Error status: ${res.status}`, isError: true}))
         }
@@ -94,6 +116,10 @@ const blogsReducer = (state = [], action) => {
             return state.filter(b => b !== action.blog)
         case 'UPDATE_BLOG':
             return state.map(b => b.id === action.blog.id ? action.blog : b)
+        case 'ADD_COMMENT':
+            return state.map(b =>
+                b.id === action.blogid ? {...b, comments: [...b.comments, action.comment]} : b)
+
         default:
             return state
     }
